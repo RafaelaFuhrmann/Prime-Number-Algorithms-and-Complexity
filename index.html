@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./resources/style.css">
+    <link rel="stylesheet" href="./resources/pygments.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <title>Prime Number Algorithms & Complexity</title>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <h1>Prime Number Generation: A Journey Through Algorithmic Complexity</h1>
+    <h2>Checking for prime numbers</h2>
+    <p>Let's write a program that takes a positive integer as an argument and returns whether the number is a prime number in the form of a boolean.</p>
+    <h3>The simple solution:</h3>
+    <div class="code-container">
+        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+        <pre>
+            <code>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">:</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">divisor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+            </code>
+        </pre>
+    </div>
+    <p>The above program has a time complexity of O(n), where n is the input. It is a straightforward approach that gets the job done, but it is not efficient. Can we do better?</p>
+    <h3>Better:</h3>
+    <div class="code-container">
+        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+        <pre>
+            <code>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="code-line"><span class="n">root</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>            <span class="tooltip"></span></span>
+    <span class="k">for</span> <span class="n">divisor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+            </code>
+        </pre>
+    </div>
+    <p>We just improved our time complexity from <strong>O(n)</strong> to <strong>O(√n)</strong>. How? By limiting the range of our loop to the square root of the number.<br>
+        This works because any composite number (non-prime) is a product of two smaller natural numbers. At least one of those numbers must be less than or equal to the square root. If we don’t find a divisor by the time we reach the square root, no divisors exist, and the number is prime.<br>        
+        Example:<br>
+        Take 36. It’s a composite number because 36 = 6 × 6 or 36 = 4 × 9.<br>        
+        <ul>
+        <li>The square root of 36 is 6.</li>
+        <li>If we loop up to 6 and find a divisor (e.g., 2 or 3), we confirm it’s not prime without checking larger numbers like 9 or 18.</li>
+        </ul>
+        For a prime number like 37, no divisors will be found up to its square root (~6.08), so it’s correctly identified as prime.
+    </p>
+    <h2>Listing prime numbers</h2>
+    <p>Now that we have an efficient method to check if a number is prime, let’s explore ways to generate a list of prime numbers and discuss the time complexity of those programs.</p>
+    
+    <h3>The simple solution:</h3>
+    <div class="code-container">
+        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+        <pre>
+            <code>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="n">root</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">for</span> <span class="n">divisor</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">list_primes</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span> 
+    <span class="n">primes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>  
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">):</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">primes</span>
+</pre></div>
+               
+            </code>
+        </pre>
+    </div>
+    <p>So, what are we looking at now? Previously, our program had a time complexity of 
+        <strong>𝑂(√𝑛)</strong> for checking whether a single number is prime. However, now that we run this program <strong>𝑛</strong> times (once for each number in the range we want to check for primality), the overall time complexity becomes:
+    </p>
+    <p><strong>F(n) = n ⋅ √n = O(n<sup>3/2</sup>).</strong></p>
+    <p>This is an improvement compared to a brute-force approach of checking divisors up to <strong>𝑛</strong> for each number, which would result in 
+       <strong>𝑂(𝑛<sup>2</sup>)</strong> complexity. However, <strong>𝑂(𝑛<sup>3/2</sup>)</strong> is still quite computationally intensive, and there may be room for further optimization.</p>
+    <h3>Better:</h3>
+       <div class="code-container">
+        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+        <pre>
+            <code>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">divisors</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">number</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">number</span> <span class="o">==</span> <span class="mi">3</span>
+    
+    <span class="k">for</span> <span class="n">divisor</span> <span class="ow">in</span> <span class="n">divisors</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">number</span> <span class="o">%</span> <span class="n">divisor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span>
+
+<span class="k">def</span> <span class="nf">list_primes</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">primes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">number</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">is_prime</span><span class="p">(</span><span class="n">number</span><span class="p">,</span> <span class="n">primes</span><span class="p">):</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">primes</span>
+</pre></div>
+            </code>
+        </pre>
+    </div>
+    <p>This time, we’ve modified the way we check for primality. Instead of testing divisibility up to <strong>𝑛</strong>, we only test against previously found prime numbers. This leverages the fact that a number is prime if it is not divisible by any smaller prime.</p>
+    <p>In the <strong>list_primes</strong> function, for each number, we check its primality using the primes we’ve already found, avoiding redundant computations. Let’s analyze the time complexity:</p>
+    <ul>
+        <li>For the first prime numbers, the <strong>is_prime</strong> function performs very few checks. But as the list of primes grows, the number of divisors tested increases.</li>
+        <li>The number of divisors tested for a number <strong>𝑘</strong> is approximately the number of primes less than <strong>√𝑘</strong>              , which is asymptotically 
+            <strong>𝑂(𝑘/log(𝑘))</strong> (from the Prime Number Theorem).</li>
+        <li>Summing this for all numbers up to n, we get an approximate complexity of: <br> \( F(n) = \sum_{k=2}^n \frac{\sqrt{k}}{\log(k)} \)</li>
+    </ul>
+    <p>While this is faster than <strong>𝑂(𝑛<sup>3/2</sup>)</strong> for large <strong>𝑛</strong>, it is still slower than the Sieve of Eratosthenes, which has a time complexity of 
+       <strong>𝑂(𝑛 log(log(𝑛)))</strong>.</p>
+
+       <h3>The Sieve of Eratosthenes:</h3>
+       <div class="code-container">
+        <button class="copy-button" onclick="copyCode(this)">Copy</button>
+        <pre>
+            <code>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">list_primes</span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="n">primality</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">primes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">primality</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+                <span class="n">primality</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">primes</span>
+</pre></div>
+            </code>
+        </pre>
+    </div>
+    <p>This implementation introduces the <strong>Sieve of Eratosthenes</strong>, a classic algorithm for generating prime numbers efficiently. Instead of checking each number individually for primality, it systematically marks multiples of each prime as non-prime. Let’s break it down:</p>
+    <ol>
+        <li>We start with a list, primality, where every number up to <strong>𝑛</strong> is initially assumed to be prime <strong>(True)</strong>.</li>
+        <li>As we iterate through each number <strong>𝑖</strong> starting from 2:</li>
+        <ul>
+            <li>If <strong>𝑖</strong> is still marked as prime, we mark all multiples of <strong>𝑖</strong> (starting from <strong>2𝑖</strong>) as non-prime <strong>(False)</strong>.</li>
+            <li><strong>𝑖</strong> itself is then added to the list of primes.</li>
+        </ul>
+        <li>By the end of the loop, all prime numbers up to <strong>𝑛</strong> will remain marked as <strong>True</strong>, and the <strong>primes</strong> list will contain these numbers.</li>
+    </ol>
+    <h4>Time complexity</h4>
+    <p>The beauty of the Sieve of Eratosthenes lies in its efficiency. Let’s analyze its time complexity:</p>
+    <ul>
+        <li>The inner loop runs for each prime <strong>𝑖</strong>, marking its multiples as non-prime.</li>
+        <li>The total work done by the algorithm is proportional to:<br>
+            \( \sum_{i=2}^n \frac{n}{i} \approx n \cdot \left( 1 + \frac{1}{2} + \frac{1}{3} + \ldots + \frac{1}{n} \right) \)</li>
+    </ul>
+    <p>This sum is approximately <strong>𝑛 log(log(𝑛))</strong>, making the algorithm’s complexity <strong>𝑂(𝑛 log(log(𝑛)))</strong>.</p>
+    
+    <h3>An example</h3>
+    <p><b>1. Naive Approach (Nested Loops):</b></p>
+    <p>
+    Time complexity: \( O(n^2) \) <br>
+    For \( n = 500 \): <br><br>
+    \(
+    500^2 = 250,000 \text{ checks.}
+    \)
+    </p>
+    
+    <p><b>2. Primality Testing with Divisors up to \( \sqrt{n} \) (Repeated for Each Number):</b></p>
+    <p>
+    Time complexity: \( O(n^{3/2}) \) <br>
+    For \( n = 500 \): <br><br>
+    \(
+    500^{3/2} = 500 \cdot \sqrt{500} = 500 \cdot 22.36 \approx 11,180 \text{ checks.}
+    \)
+    </p>
+    
+    <p><b>3. Sieve of Eratosthenes:</b></p>
+    <p>
+    Time complexity: \( O(n \log(\log(n))) \) <br>
+    For \( n = 500 \): <br><br>
+    \(
+    n \log(\log(n)) = 500 \cdot \log(\log(500)).
+    \)<br>
+    \(
+    \log(500) \approx 6.214 \quad \text{(base \( e \))}.
+    \)<br>
+    \(
+    \log(\log(500)) \approx \log(6.214) \approx 1.83.
+    \)<br>
+    \(
+    500 \cdot 1.83 \approx 915 \text{ checks.}
+    \)
+    </p>
+    <script>
+        // Funktion, um Code zu kopieren
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling.querySelector('code').textContent;
+            
+            // Code in die Zwischenablage kopieren
+            navigator.clipboard.writeText(codeBlock).then(() => {
+                // Feedback für den Benutzer
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        }
+        document.addEventListener("DOMContentLoaded", () => {
+        const explanations = {
+            1: "Line in Detail:<br><strong>number ** 0.5</strong> calculates the square root of <strong>number</strong>.<br>Since Python uses floating-point arithmetic, we convert the result to an integer.<br>Adding 1 ensures the loop includes the square root itself in the test range. Why is this important?<br>Take 25 as an example: it is divisible by 1, 5, and 25, so it’s not a prime number. However, 5 is its square root.<br>If the loop stops at 4, it will miss testing 5, incorrectly returning <strong>True</strong> instead of <strong>False</strong>.",
+            2: "Zahlen kleiner als 4 werden direkt geprüft."
+        };
+
+        // Alle Code-Zeilen finden
+        const codeLines = document.querySelectorAll('.code-line');
+
+        // Tooltip hinzufügen
+        codeLines.forEach((line, index) => {
+            const explanation = explanations[index + 1];
+            if (explanation) {
+                const tooltip = document.createElement('span');
+                tooltip.className = 'tooltip';
+                tooltip.innerHTML = explanation;
+
+                const icon = document.createElement('span');
+                icon.className = 'info-icon';
+                icon.textContent = 'ℹ';
+
+                line.appendChild(icon);
+                line.appendChild(tooltip);
+            }
+        });
+    });
+    </script>
+</body>
+</html>

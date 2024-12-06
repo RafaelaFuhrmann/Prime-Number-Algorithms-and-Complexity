@@ -1,0 +1,82 @@
+html {
+    background-color: #181915;
+    color: #f8f8f2;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 10% auto 10%;
+    font-family: 'Roboto', serif;
+    line-height: 1.7;
+}
+
+
+body {
+    grid-column: 2/3;
+}
+
+.highlight {
+    padding: 0;
+}
+
+.code-container {
+    background-color: #272822;
+    position: relative;
+    width: 30%;
+    padding: 0 30px;
+    border-radius: 5px;
+}
+.copy-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.copy-button:hover {
+    background-color: #0056b3;
+}
+
+/* Tooltip-Stil */
+.tooltip {
+    visibility: hidden;
+    background-color: #444;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 5px;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #444 transparent transparent transparent;
+}
+
+/* Tooltip beim Hover sichtbar machen */
+.code-line:hover .tooltip {
+    visibility: visible;
+}
+
+/* Icon-Stil */
+.info-icon {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #61dafb;
+    font-size: 14px;
+}
